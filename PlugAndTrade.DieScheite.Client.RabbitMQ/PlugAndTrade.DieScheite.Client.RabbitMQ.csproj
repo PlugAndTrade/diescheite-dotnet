@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>PlugAndTrade.DieScheite.Client.RabbitMQ</PackageId>
+    <Title>PlugAndTrade.DieScheite.Client.RabbitMQ</Title>
+    <Description>Logging Die Scheite log entries to RabbitMQ</Description>
+    <PackageVersion>0.1.0</PackageVersion>
+    <Authors>developers@plug-n-trade.com</Authors>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Common\PlugAndTrade.DieScheite.Client.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="PlugAndTrade.RabbitMQ" Version="2.0.2" />
+  </ItemGroup>
+</Project>

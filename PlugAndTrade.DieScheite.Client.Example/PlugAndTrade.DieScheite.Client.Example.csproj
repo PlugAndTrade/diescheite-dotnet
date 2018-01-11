@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Common\PlugAndTrade.DieScheite.Client.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Console\PlugAndTrade.DieScheite.Client.Console.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.RabbitMQ\PlugAndTrade.DieScheite.Client.RabbitMQ.csproj" />
+  </ItemGroup>
+</Project>
