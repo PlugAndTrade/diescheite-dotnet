@@ -15,11 +15,16 @@ namespace PlugAndTrade.DieScheite.Client.Common
             _version = version;
         }
 
-        public LogEntry Init(string correlationId, string parentId)
+        public string ServiceFullName { get => $"{_serviceId}-{_instanceId}<{_version}>"; }
+
+        public LogEntry Init(string correlationId, string parentId) =>
+            Init(correlationId, parentId, Guid.NewGuid().ToString());
+
+        public LogEntry Init(string correlationId, string parentId, string id)
         {
             return new LogEntry
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = id,
                 ParentId = parentId,
                 CorrelationId = correlationId,
                 ServiceId = _serviceId,
