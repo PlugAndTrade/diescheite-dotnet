@@ -21,6 +21,12 @@ RUN dotnet pack \
   --include-symbols \
   PlugAndTrade.DieScheite.Client.Console/PlugAndTrade.DieScheite.Client.Console.csproj \
   --output ../release
+RUN dotnet pack \
+  -c Release \
+  --include-source \
+  --include-symbols \
+  PlugAndTrade.DieScheite.Client.AspNetCore/PlugAndTrade.DieScheite.Client.AspNetCore.csproj \
+  --output ../release
 RUN find ./release -name '*.nupkg' -not -name '*.symbols.nupkg' | xargs -i dotnet nuget push {} \
   -k 9df6908f-5140-4415-92f3-85fffdfabbaa \
   -s https://www.myget.org/F/plugandtrade-packages/api/v2/package \
