@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +24,14 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
             entry.Id = context.TraceIdentifier;
             entry.CorrelationId = context.Request.Headers["x-correlation-id"].FirstOrDefault() ?? Guid.NewGuid().ToString();
             entry.ParentId = context.Request.Headers["x-parent-scope-id"].FirstOrDefault();
+            entry.HttpRequest(new LogEntryHttpRequest
+            {
+                Method = context.Request.Method,
+                Uri = $"{context.Request.Path}{context.Request.QueryString.ToString()}",
+                Host = context.Request.Host.ToString(),
+            });
+
+            var requestBody = GetBody(context.Request);
             try
             {
                 await _next(context);
@@ -34,6 +43,23 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
             }
             finally
             {
+                entry.HttpResponse(new LogEntryHttpResponse
+                {
+                    StatusCode = context.Response.StatusCode
+                });
+                if (context.Response.StatusCode >= 400)
+                {
+                    entry.Http.Request.Body = requestBody.Length > 0 ? requestBody : null;
+                    foreach (var header in context.Request.Headers)
+                    {
+                        entry.Http.Request.Headers.Add(new KeyValuePair<string, object>(header.Key, header.Value.First()));
+                    }
+                    foreach (var header in context.Response.Headers)
+                    {
+                        entry.Http.Response.Headers.Add(new KeyValuePair<string, object>(header.Key, header.Value.First()));
+                    }
+                }
+
                 entry.Finalize();
                 foreach (var logger in loggers)
                 {
@@ -48,6 +74,23 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
                     }
                 }
             }
+        }
+
+        private byte[] GetBody(HttpRequest request)
+        {
+            var mem = new MemoryStream();
+            request.Body.CopyToAsync(mem);
+            var res = mem.ToArray();
+            if (!request.Body.CanSeek)
+            {
+                mem.Seek(0, SeekOrigin.Begin);
+                request.Body = mem;
+            }
+            else
+            {
+                request.Body.Seek(0, SeekOrigin.Begin);
+            }
+            return res;
         }
     }
 }
