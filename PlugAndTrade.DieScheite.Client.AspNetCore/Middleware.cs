@@ -37,7 +37,15 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
                 entry.Finalize();
                 foreach (var logger in loggers)
                 {
-                    logger.Publish(entry);
+                    try
+                    {
+                        logger.Publish(entry);
+                    }
+                    catch (Exception e)
+                    {
+                        System.Console.Error.WriteLine($"Error when publishing log entry: {e.Message}");
+                        System.Console.Error.WriteLine(e.StackTrace);
+                    }
                 }
             }
         }
