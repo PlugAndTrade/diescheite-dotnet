@@ -27,6 +27,7 @@ namespace PlugAndTrade.DieScheite.Client.Example.AspNetCore
             services.AddMvc();
             services.AddDieScheite("ExampleApi", "01", "0.1.0");
             services.AddDieScheiteConsole();
+            services.AddDieScheiteRabbitMQ("localhost", 5672, "diescheite");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
