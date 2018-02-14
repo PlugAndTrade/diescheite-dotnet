@@ -59,5 +59,37 @@ namespace PlugAndTrade.DieScheite.Client.Common
             new LogEntryActiveTrace(name, null, (trace) => entry.Trace.Add(trace));
         public static LogEntryActiveTrace Trace(this LogEntry entry, string name, LogEntryActiveTrace parent) =>
             new LogEntryActiveTrace(name, parent, (trace) => entry.Trace.Add(trace));
+
+        public static LogEntry Http(this LogEntry entry, LogEntryHttpData http)
+        {
+            entry.Http = http;
+            return entry;
+        }
+
+        public static LogEntry HttpRequest(this LogEntry entry, LogEntryHttpRequest request)
+        {
+            if (entry.Http == null)
+            {
+                return entry.Http(new LogEntryHttpData { Request = request });
+            }
+            else
+            {
+                entry.Http.Request = request;
+                return entry;
+            }
+        }
+
+        public static LogEntry HttpResponse(this LogEntry entry, LogEntryHttpResponse response)
+        {
+            if (entry.Http == null)
+            {
+                return entry.Http(new LogEntryHttpData { Response = response });
+            }
+            else
+            {
+                entry.Http.Response = response;
+                return entry;
+            }
+        }
     }
 }

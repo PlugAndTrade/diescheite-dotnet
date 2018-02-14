@@ -15,6 +15,7 @@ namespace PlugAndTrade.DieScheite.Client.Common
       public IList<KeyValuePair<string, object>> Headers { get; }
       public IList<LogEntryTrace> Trace { get; }
       public IList<LogEntryMessage> Messages { get; }
+      public LogEntryHttpData Http { get; set; }
 
       public LogEntry()
       {
