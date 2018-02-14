@@ -8,7 +8,11 @@ namespace PlugAndTrade.DieScheite.Client.Console
     {
         public void Publish(LogEntry entry)
         {
-            System.Console.WriteLine($"{entry.Timestamp}[{entry.Duration}ms]: {entry.ServiceId}<{entry.ServiceVersion}>({entry.ServiceInstanceId}) {{");
+            var time = DateTimeOffset
+                .FromUnixTimeMilliseconds(entry.Timestamp)
+                .DateTime
+                .ToLocalTime();
+            System.Console.WriteLine($"{time:yyyy-MM-dd HH:mm:ss.fff} [{entry.Duration}ms]: {entry.ServiceId}<{entry.ServiceVersion}>({entry.ServiceInstanceId}) {{");
 
             if (entry.Http != null)
             {
