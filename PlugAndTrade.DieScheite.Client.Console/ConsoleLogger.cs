@@ -9,6 +9,12 @@ namespace PlugAndTrade.DieScheite.Client.Console
         public void Publish(LogEntry entry)
         {
             System.Console.WriteLine($"{entry.Timestamp}[{entry.Duration}ms]: {entry.ServiceId}<{entry.ServiceVersion}>({entry.ServiceInstanceId}) {{");
+
+            if (entry.Http != null)
+            {
+                System.Console.WriteLine($"{entry.Http.Request.Method} {entry.Http.Request.Uri} <- {entry.Http.Response.StatusCode}");
+            }
+
             foreach (var message in entry.Messages)
             {
                 System.Console.WriteLine($" * [{message.Level}]<{message.TraceId}>: {message.Message}");
