@@ -28,16 +28,19 @@ namespace PlugAndTrade.DieScheite.Client.Console
                 }
             }
 
-            System.Console.WriteLine("Traces:");
-            var traces = entry.Trace.ToLookup(t => t.ParentId ?? "");
-            foreach (var trace in traces[""]) PrintTrace(trace, traces);
+            if (entry.Trace.Count > 0)
+            {
+                System.Console.WriteLine("Traces:");
+                var traces = entry.Trace.ToLookup(t => t.ParentId ?? "");
+                foreach (var trace in traces[""]) PrintTrace(trace, traces);
+            }
 
             System.Console.WriteLine("}");
         }
 
         private void PrintTrace(LogEntryTrace trace, ILookup<string, LogEntryTrace> traces, int depth = 1)
         {
-            System.Console.WriteLine($" {string.Join("", Enumerable.Repeat(">", depth))} {trace.Name}<{trace.Id}>: {trace.Duration}ms {trace.Timestamp}");
+            System.Console.WriteLine($" {string.Join("", Enumerable.Repeat(">", depth))} {trace.Name}: {trace.Duration}ms {trace.Timestamp}");
             foreach (var childTrace in traces[trace.Id]) PrintTrace(childTrace, traces, ++depth);
         }
     }
