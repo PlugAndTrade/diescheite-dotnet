@@ -31,7 +31,7 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
                 Host = context.Request.Host.ToString(),
             });
 
-            var requestBody = GetBody(context.Request);
+            var requestBody = await GetBody(context.Request);
             try
             {
                 await _next(context);
@@ -76,10 +76,10 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
             }
         }
 
-        private byte[] GetBody(HttpRequest request)
+        private async Task<byte[]> GetBody(HttpRequest request)
         {
             var mem = new MemoryStream();
-            request.Body.CopyToAsync(mem);
+            await request.Body.CopyToAsync(mem);
             var res = mem.ToArray();
             if (!request.Body.CanSeek)
             {
