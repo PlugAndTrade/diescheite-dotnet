@@ -8,12 +8,12 @@ using PlugAndTrade.DieScheite.Client.Common;
 
 namespace PlugAndTrade.DieScheite.Client.AspNetCore
 {
-    public class Middleware
+    public class DieScheiteMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly LogEntryFactory _factory;
 
-        public Middleware(RequestDelegate next, LogEntryFactory factory)
+        public DieScheiteMiddleware(RequestDelegate next, LogEntryFactory factory)
         {
             _next = next;
             _factory = factory;
