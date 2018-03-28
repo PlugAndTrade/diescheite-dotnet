@@ -5,20 +5,14 @@
     <PackageId>PlugAndTrade.DieScheite.Client.AspNetCore</PackageId>
     <Title>PlugAndTrade.DieScheite.Client.AspNetCore</Title>
     <Description>Asp Net Core extensions for DieScheite logging.</Description>
-    <PackageVersion>0.2.2</PackageVersion>
+    <PackageVersion>0.2.3</PackageVersion>
     <Authors>developers@plug-n-trade.com</Authors>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Common\PlugAndTrade.DieScheite.Client.Common.csproj" />
-    <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Common.Microsoft.Extensions.DependencyInjection\PlugAndTrade.DieScheite.Client.Common.Microsoft.Extensions.DependencyInjection.csproj" />
-    <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Console\PlugAndTrade.DieScheite.Client.Console.csproj" />
-    <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Console.Microsoft.Extensions.DependencyInjection\PlugAndTrade.DieScheite.Client.Console.Microsoft.Extensions.DependencyInjection.csproj" />
-    <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.RabbitMQ\PlugAndTrade.DieScheite.Client.RabbitMQ.csproj" />
-    <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.RabbitMQ.Microsoft.Extensions.DependencyInjection\PlugAndTrade.DieScheite.Client.RabbitMQ.Microsoft.Extensions.DependencyInjection.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.0.1" />
-    <PackageReference Include="PlugAndTrade.RabbitMQ" Version="2.0.2" />
   </ItemGroup>
 
 </Project>
