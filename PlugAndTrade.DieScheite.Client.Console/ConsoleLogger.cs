@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using PlugAndTrade.DieScheite.Client.Common;
 
 namespace PlugAndTrade.DieScheite.Client.Console
 {
     public class ConsoleLogger : ILogger
     {
-        public void Publish(LogEntry entry)
+        public Task Publish(LogEntry entry)
         {
             var time = DateTimeOffset
                 .FromUnixTimeMilliseconds(entry.Timestamp)
@@ -36,6 +37,7 @@ namespace PlugAndTrade.DieScheite.Client.Console
             }
 
             System.Console.WriteLine("}");
+            return Task.CompletedTask;
         }
 
         private void PrintTrace(LogEntryTrace trace, ILookup<string, LogEntryTrace> traces, int depth = 1)

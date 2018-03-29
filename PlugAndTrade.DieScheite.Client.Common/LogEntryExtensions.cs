@@ -45,15 +45,19 @@ namespace PlugAndTrade.DieScheite.Client.Common
             });
             return entry;
         }
+        public static LogEntry Log(this LogEntry entry, LogEntryLevel level, string message, string stacktrace = null, string traceId = null) =>
+            entry.Log((int) level, message, stacktrace, traceId);
 
         public static LogEntry Debug(this LogEntry entry, string message, string traceId = null) =>
-            entry.Log(0, message, null, traceId);
+            entry.Log((int) LogEntryLevel.Debug, message, null, traceId);
         public static LogEntry Info(this LogEntry entry, string message, string traceId = null) =>
-            entry.Log(1, message, null, traceId);
+            entry.Log((int) LogEntryLevel.Info, message, null, traceId);
         public static LogEntry Warning(this LogEntry entry, string message, string traceId = null) =>
-            entry.Log(2, message, null, traceId);
+            entry.Log((int) LogEntryLevel.Warning, message, null, traceId);
         public static LogEntry Error(this LogEntry entry, string message, string stacktrace = null, string traceId = null) =>
-            entry.Log(3, message, stacktrace, traceId);
+            entry.Log((int) LogEntryLevel.Error, message, stacktrace, traceId);
+        public static LogEntry Critical(this LogEntry entry, string message, string stacktrace = null, string traceId = null) =>
+            entry.Log((int) LogEntryLevel.Critical, message, stacktrace, traceId);
 
         public static LogEntryActiveTrace Trace(this LogEntry entry, string name) =>
             new LogEntryActiveTrace(name, null, (trace) => entry.Trace.Add(trace));

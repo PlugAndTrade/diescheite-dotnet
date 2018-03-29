@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PlugAndTrade.DieScheite.Client.Common
 {
@@ -11,12 +12,13 @@ namespace PlugAndTrade.DieScheite.Client.Common
             _loggers = loggers;
         }
 
-        public void Publish(LogEntry entry)
+        public Task Publish(LogEntry entry)
         {
             foreach (var logger in _loggers)
             {
                 logger.Publish(entry);
             }
+            return Task.CompletedTask;
         }
     }
 }

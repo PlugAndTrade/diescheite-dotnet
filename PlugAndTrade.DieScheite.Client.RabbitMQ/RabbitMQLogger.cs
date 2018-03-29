@@ -4,6 +4,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using PlugAndTrade.DieScheite.Client.Common;
 using PlugAndTrade.RabbitMQ;
 
@@ -18,7 +19,7 @@ namespace PlugAndTrade.DieScheite.Client.RabbitMQ
             _producer = producer;
         }
 
-        public void Publish(LogEntry entry)
+        public Task Publish(LogEntry entry)
         {
             _producer.Publish("application/json", "gzip", Serialize(entry), "", (props) =>
             {
@@ -32,6 +33,7 @@ namespace PlugAndTrade.DieScheite.Client.RabbitMQ
                     props.Headers.Add(pair.Key, pair.Value);
                 }
             });
+            return Task.CompletedTask;
         }
 
         public static byte[] Serialize(LogEntry entry)

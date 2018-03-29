@@ -1,7 +1,9 @@
+using System.Threading.Tasks;
+
 namespace PlugAndTrade.DieScheite.Client.Common
 {
     public interface ILogger
     {
-        void Publish(LogEntry entry);
+        Task Publish(LogEntry entry);
     }
 }
