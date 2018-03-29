@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PlugAndTrade.DieScheite.Client.Common;
@@ -7,8 +8,33 @@ namespace PlugAndTrade.DieScheite.Client.Console
 {
     public class ConsoleLogger : ILogger
     {
+        private readonly IReadOnlyCollection<Func<LogEntry, bool>> _filters;
+
+        public ConsoleLogger()
+        {
+            _filters = new Func<LogEntry, bool>[0];
+        }
+
+        public ConsoleLogger(IReadOnlyCollection<Func<LogEntry, bool>> filters)
+        {
+            _filters = filters.ToArray();
+        }
+
+        public ConsoleLogger(LogEntryLevel minLevel)
+        {
+            _filters = new Func<LogEntry, bool>[]
+            {
+                e => e.Messages.Any(m => m.Level >= (int) minLevel)
+            };
+        }
+
         public Task Publish(LogEntry entry)
         {
+            if (!_filters.Any(f => f(entry)))
+            {
+                return Task.CompletedTask;
+            }
+
             var time = DateTimeOffset
                 .FromUnixTimeMilliseconds(entry.Timestamp)
                 .DateTime

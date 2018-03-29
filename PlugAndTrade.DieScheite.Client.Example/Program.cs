@@ -14,7 +14,11 @@ namespace PlugAndTrade.DieScheite.Client.Example
             var rabbitMqFactory = new RabbitMQClientFactory("localhost", 5672, "die-scheite.client.example");
             var producer = rabbitMqFactory.CreateProducer("diescheite", 1000);
             var factory = new LogEntryFactory("PlugAndTrade.DieScheite.Client.Example", "01", "1.0.0");
-            var logger = new CombinedLogger(new ILogger[] { new ConsoleLogger(), new RabbitMQLogger(producer) });
+            var logger = new CombinedLogger(new ILogger[]
+            {
+                new ConsoleLogger(LogEntryLevel.Info),
+                new RabbitMQLogger(producer)
+            });
             factory.LoggedAction(logger, "<correlationId>", null, (entry) =>
             {
                 entry
