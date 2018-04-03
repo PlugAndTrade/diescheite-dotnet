@@ -30,7 +30,7 @@ namespace PlugAndTrade.DieScheite.Client.Console
 
         public Task Publish(LogEntry entry)
         {
-            if (!_filters.Any(f => f(entry)))
+            if (_filters.Any() && _filters.All(f => !f(entry)))
             {
                 return Task.CompletedTask;
             }
