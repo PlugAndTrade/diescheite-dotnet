@@ -28,7 +28,7 @@ namespace PlugAndTrade.DieScheite.Client.Console
             };
         }
 
-        public Task Publish(LogEntry entry)
+        public Task Publish(LogEntry entry) => Task.Run(() =>
         {
             if (_filters.Any() && _filters.All(f => !f(entry)))
             {
@@ -64,7 +64,7 @@ namespace PlugAndTrade.DieScheite.Client.Console
 
             System.Console.WriteLine("}");
             return Task.CompletedTask;
-        }
+        });
 
         private void PrintTrace(LogEntryTrace trace, ILookup<string, LogEntryTrace> traces, int depth = 1)
         {
