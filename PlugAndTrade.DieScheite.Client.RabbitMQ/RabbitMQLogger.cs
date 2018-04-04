@@ -19,7 +19,7 @@ namespace PlugAndTrade.DieScheite.Client.RabbitMQ
             _producer = producer;
         }
 
-        public Task Publish(LogEntry entry)
+        public Task Publish(LogEntry entry) => Task.Run(() =>
         {
             _producer.Publish("application/json", "gzip", Serialize(entry), "", (props) =>
             {
@@ -33,8 +33,7 @@ namespace PlugAndTrade.DieScheite.Client.RabbitMQ
                     props.Headers.Add(pair.Key, pair.Value);
                 }
             });
-            return Task.CompletedTask;
-        }
+        });
 
         public static byte[] Serialize(LogEntry entry)
         {
