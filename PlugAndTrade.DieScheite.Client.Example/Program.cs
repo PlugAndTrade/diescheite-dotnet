@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Threading;
 using PlugAndTrade.DieScheite.Client.Common;
 using PlugAndTrade.DieScheite.Client.Console;
+using PlugAndTrade.DieScheite.Client.JsonConsole;
 using PlugAndTrade.DieScheite.Client.RabbitMQ;
 using PlugAndTrade.RabbitMQ;
 
@@ -11,57 +14,67 @@ namespace PlugAndTrade.DieScheite.Client.Example
     {
         public static void Main(string[] args)
         {
-            var rabbitMqFactory = new RabbitMQClientFactory("localhost", 5672, "die-scheite.client.example");
-            var producer = rabbitMqFactory.CreateProducer("diescheite", 1000);
             var factory = new LogEntryFactory("PlugAndTrade.DieScheite.Client.Example", "01", "1.0.0");
-            var logger = new CombinedLogger(new ILogger[]
+            var logger = args.Length == 0
+                ? (ILogger) new ConsoleLogger(LogEntryLevel.Info)
+                : new CombinedLogger(args.Select(a =>
+                    a == "rabbitmq" ? (ILogger) new RabbitMQLogger(
+                        new RabbitMQClientFactory("localhost", 5672, "die-scheite.client.example")
+                        .CreateProducer("diescheite", 1000)
+                    )
+                    : a == "console" ? (ILogger) new ConsoleLogger(LogEntryLevel.Info)
+                    : a == "json" ? (ILogger) new JsonConsoleLogger()
+                    : null
+                )
+                .Where(l => l != null)
+                .ToArray());
+
+            while (true)
             {
-                new ConsoleLogger(LogEntryLevel.Info),
-                new RabbitMQLogger(producer)
-            });
-            factory.LoggedAction(logger, "<correlationId>", null, (entry) =>
-            {
-                entry
-                    .AddHeader("SomeString", "string")
-                    .AddHeader("SomeInt", 1)
-                    .AddHeader("SomeLong", 1000000000000L)
-                    .AddHeader("SomeDecimal", 1.1)
-                    .AddHeader("SomeBoolT", true)
-                    .AddHeader("SomeBoolF", false);
-
-                entry.Info("Begin job");
-                using (var trace = entry.Trace("first-trace"))
+                factory.LoggedAction(logger, "<correlationId>", null, (entry) =>
                 {
-                    entry.Info("Start doing some work...", trace.Id);
-                    DoWork();
-                    entry.Info("done", trace.Id);
-                }
+                    entry
+                        .AddHeader("SomeString", "string")
+                        .AddHeader("SomeInt", 1)
+                        .AddHeader("SomeLong", 1000000000000L)
+                        .AddHeader("SomeDecimal", 1.1)
+                        .AddHeader("SomeBoolT", true)
+                        .AddHeader("SomeBoolF", false);
 
-                using (var trace = entry.Trace("second-trace"))
-                {
-                    entry.Info("Start doing faiing work...", trace.Id);
-                    try
+                    entry.Info("Begin job");
+                    using (var trace = entry.Trace("first-trace"))
                     {
-                      DoError();
+                        entry.Info("Start doing some work...", trace.Id);
+                        DoWork();
+                        entry.Info("done", trace.Id);
                     }
-                    catch (Exception e)
+
+                    using (var trace = entry.Trace("second-trace"))
                     {
-                      entry.Error(e.Message, e.StackTrace, trace.Id);
+                        entry.Info("Start doing faiing work...", trace.Id);
+                        try
+                        {
+                          DoError();
+                        }
+                        catch (Exception e)
+                        {
+                          entry.Error(e.Message, e.StackTrace, trace.Id);
+                        }
+
+                        entry.Info("Nested tracing...", trace.Id);
+                        using (var nestedTrace = entry.Trace("nested-trace", trace))
+                        {
+                            entry.Info("in nested trace", nestedTrace.Id);
+                        }
+                        entry.Info("nested done", trace.Id);
+
+                        entry.Info("done", trace.Id);
                     }
+                    entry.Info("End job");
+                });
 
-                    entry.Info("Nested tracing...", trace.Id);
-                    using (var nestedTrace = entry.Trace("nested-trace", trace))
-                    {
-                        entry.Info("in nested trace", nestedTrace.Id);
-                    }
-                    entry.Info("nested done", trace.Id);
-
-                    entry.Info("done", trace.Id);
-                }
-                entry.Info("End job");
-            });
-
-            rabbitMqFactory.Dispose();
+                Thread.Sleep(1000);
+            }
         }
 
         public static int DoWork()

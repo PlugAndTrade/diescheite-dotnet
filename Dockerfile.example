@@ -1,0 +1,18 @@
+FROM microsoft/dotnet:2.0-sdk AS builder
+
+ENV APP_DIR=/app
+ENV DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
+ENV NUGET_XMLDOC_MODE=skip
+RUN mkdir -p $APP_DIR
+
+WORKDIR $APP_DIR
+ADD . $APP_DIR
+RUN dotnet build -c Release PlugAndTrade.DieScheite.Client.Example/PlugAndTrade.DieScheite.Client.Example.csproj \
+    && dotnet publish -c Release PlugAndTrade.DieScheite.Client.Example/PlugAndTrade.DieScheite.Client.Example.csproj
+
+FROM microsoft/dotnet:2.0-runtime
+RUN mkdir -p /app
+WORKDIR /app
+EXPOSE 5000
+COPY --from=builder /app/PlugAndTrade.DieScheite.Client.Example/bin/Release/netcoreapp2.0/publish .
+ENTRYPOINT ["dotnet", "PlugAndTrade.DieScheite.Client.Example.dll"]
