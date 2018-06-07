@@ -13,6 +13,12 @@ RUN dotnet pack \
   -c Release \
   --include-source \
   --include-symbols \
+  PlugAndTrade.DieScheite.Client.Json/PlugAndTrade.DieScheite.Client.Json.csproj \
+  --output ../release
+RUN dotnet pack \
+  -c Release \
+  --include-source \
+  --include-symbols \
   PlugAndTrade.DieScheite.Client.Common.Microsoft.Extensions.DependencyInjection/PlugAndTrade.DieScheite.Client.Common.Microsoft.Extensions.DependencyInjection.csproj \
   --output ../release
 RUN dotnet pack \
@@ -38,6 +44,18 @@ RUN dotnet pack \
   --include-source \
   --include-symbols \
   PlugAndTrade.DieScheite.Client.Console.Microsoft.Extensions.DependencyInjection/PlugAndTrade.DieScheite.Client.Console.Microsoft.Extensions.DependencyInjection.csproj \
+  --output ../release
+RUN dotnet pack \
+  -c Release \
+  --include-source \
+  --include-symbols \
+  PlugAndTrade.DieScheite.Client.JsonConsole/PlugAndTrade.DieScheite.Client.JsonConsole.csproj \
+  --output ../release
+RUN dotnet pack \
+  -c Release \
+  --include-source \
+  --include-symbols \
+  PlugAndTrade.DieScheite.Client.JsonConsole.Microsoft.Extensions.DependencyInjection/PlugAndTrade.DieScheite.Client.JsonConsole.Microsoft.Extensions.DependencyInjection.csproj \
   --output ../release
 RUN dotnet pack \
   -c Release \
