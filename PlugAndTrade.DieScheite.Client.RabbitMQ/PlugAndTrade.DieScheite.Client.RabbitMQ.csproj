@@ -9,6 +9,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Common\PlugAndTrade.DieScheite.Client.Common.csproj" />
+    <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Json\PlugAndTrade.DieScheite.Client.Json.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="PlugAndTrade.RabbitMQ" Version="2.0.2" />

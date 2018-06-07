@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>PlugAndTrade.DieScheite.Client.Json</PackageId>
+    <Title>PlugAndTrade.DieScheite.Client.Json</Title>
+    <Description>Die Scheite log entries json serialization</Description>
+    <PackageVersion>0.1.0</PackageVersion>
+    <Authors>developers@plug-n-trade.com</Authors>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Common\PlugAndTrade.DieScheite.Client.Common.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace PlugAndTrade.DieScheite.Client.RabbitMQ
+namespace PlugAndTrade.DieScheite.Client.Json
 {
     public static class TextWriterJsonExtensions
     {
