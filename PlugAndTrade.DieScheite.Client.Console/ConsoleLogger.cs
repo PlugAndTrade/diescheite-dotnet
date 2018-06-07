@@ -24,7 +24,7 @@ namespace PlugAndTrade.DieScheite.Client.Console
         {
             _filters = new Func<LogEntry, bool>[]
             {
-                e => e.Messages.Any(m => m.Level >= (int) minLevel)
+                e => e.Level >= (int) minLevel
             };
         }
 
