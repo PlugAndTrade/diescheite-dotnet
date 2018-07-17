@@ -11,12 +11,10 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
     public class DieScheiteMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly LogEntryFactory _factory;
 
-        public DieScheiteMiddleware(RequestDelegate next, LogEntryFactory factory)
+        public DieScheiteMiddleware(RequestDelegate next)
         {
             _next = next;
-            _factory = factory;
         }
 
         public async Task Invoke(HttpContext context, LogEntry entry, IEnumerable<ILogger> loggers)
@@ -47,6 +45,7 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
                 {
                     StatusCode = context.Response.StatusCode
                 });
+
                 if (context.Response.StatusCode >= 400)
                 {
                     entry.Http.Request.Body = requestBody.Length > 0 ? requestBody : null;
