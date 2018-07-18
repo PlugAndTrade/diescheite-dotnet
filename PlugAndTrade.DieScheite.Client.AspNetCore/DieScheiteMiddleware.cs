@@ -62,6 +62,7 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
                 entry.Finalize();
                 foreach (var logger in loggers)
                 {
+#pragma warning disable 4014
                     logger
                         .Publish(entry)
                         .ContinueWith((t) =>
@@ -70,6 +71,7 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
                             System.Console.Error.WriteLine($"Error when publishing log entry: {e.Message}");
                             System.Console.Error.WriteLine(e.StackTrace);
                         }, TaskContinuationOptions.OnlyOnFaulted);
+#pragma warning restore 4014
                 }
             }
         }
