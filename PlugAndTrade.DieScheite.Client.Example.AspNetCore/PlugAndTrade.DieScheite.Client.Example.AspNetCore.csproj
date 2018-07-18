@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="PlugAndTrade.TracingScope.AspNetCore" Version="0.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Console\PlugAndTrade.DieScheite.Client.Console.csproj" />

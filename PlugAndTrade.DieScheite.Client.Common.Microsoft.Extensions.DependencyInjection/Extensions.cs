@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using PlugAndTrade.TracingScope;
 
 namespace PlugAndTrade.DieScheite.Client.Common
 {
@@ -9,18 +10,18 @@ namespace PlugAndTrade.DieScheite.Client.Common
                 this IServiceCollection services,
                 string serviceId,
                 string serviceInstanceId,
-                string serviceVersion)
+                string serviceVersion,
+                Func<IServiceProvider, ITracingScopeAccessor> tracingScopeProvider)
         {
-            services.AddSingleton<LogEntryFactory>(sp =>
-                new LogEntryFactory(serviceId, serviceInstanceId, serviceVersion)
-            );
-
-            services.AddScoped<LogEntry>(sp => sp
-                .GetService<LogEntryFactory>()
-                .Init(null, null, null)
-            );
-
-            return services;
+            return services
+                .AddSingleton<LogEntryFactory>(sp =>
+                    new LogEntryFactory(serviceId, serviceInstanceId, serviceVersion)
+                )
+                .AddScoped<LogEntry>(sp => sp
+                    .GetService<LogEntryFactory>()
+                    .Init(tracingScopeProvider(sp).CurrentTracingScope)
+                )
+                ;
         }
     }
 }

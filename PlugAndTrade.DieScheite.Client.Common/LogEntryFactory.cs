@@ -1,4 +1,5 @@
 using System;
+using PlugAndTrade.TracingScope;
 
 namespace PlugAndTrade.DieScheite.Client.Common
 {
@@ -17,16 +18,13 @@ namespace PlugAndTrade.DieScheite.Client.Common
 
         public string ServiceFullName { get => $"{_serviceId}-{_instanceId}<{_version}>"; }
 
-        public LogEntry Init(string correlationId, string parentId) =>
-            Init(correlationId, parentId, Guid.NewGuid().ToString());
-
-        public LogEntry Init(string correlationId, string parentId, string id)
+        public LogEntry Init(ITracingScope ts)
         {
             return new LogEntry
             {
-                Id = id,
-                ParentId = parentId,
-                CorrelationId = correlationId,
+                Id = ts.ScopeId,
+                ParentId = ts.ParentScopeId,
+                CorrelationId = ts.CorrelationId,
                 ServiceId = _serviceId,
                 ServiceInstanceId = _instanceId,
                 ServiceVersion = _version,
@@ -34,16 +32,16 @@ namespace PlugAndTrade.DieScheite.Client.Common
             };
         }
 
-        public void LoggedAction(ILogger logger, string correlationId, string parentId, Action<LogEntry> action)
+        public void LoggedAction(ILogger logger, ITracingScope ts, Action<LogEntry> action)
         {
-            var entry = Init(correlationId, parentId);
+            var entry = Init(ts);
             try
             {
                 action(entry);
             }
             catch (Exception e)
             {
-                entry.Error($"Uncaught exception: {e.Message}", e.StackTrace);
+                entry.Error(e.Message, e.StackTrace);
             }
             finally
             {

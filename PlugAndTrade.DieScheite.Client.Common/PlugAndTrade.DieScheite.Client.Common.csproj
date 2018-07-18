@@ -7,4 +7,8 @@
     <PackageVersion>0.3.1</PackageVersion>
     <Authors>developers@plug-n-trade.com</Authors>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PlugAndTrade.TracingScope" Version="0.2.0" />
+  </ItemGroup>
 </Project>

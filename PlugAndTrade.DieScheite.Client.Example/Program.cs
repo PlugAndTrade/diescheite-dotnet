@@ -7,6 +7,7 @@ using PlugAndTrade.DieScheite.Client.Console;
 using PlugAndTrade.DieScheite.Client.JsonConsole;
 using PlugAndTrade.DieScheite.Client.RabbitMQ;
 using PlugAndTrade.RabbitMQ;
+using PlugAndTrade.TracingScope;
 
 namespace PlugAndTrade.DieScheite.Client.Example
 {
@@ -29,9 +30,18 @@ namespace PlugAndTrade.DieScheite.Client.Example
                 .Where(l => l != null)
                 .ToArray());
 
+            var correlationId = Guid.NewGuid().ToString();
+
             while (true)
             {
-                factory.LoggedAction(logger, "<correlationId>", null, (entry) =>
+                var tracingScope = new StaticTracingScope
+                {
+                    ScopeId = Guid.NewGuid().ToString(),
+                    ParentScopeId = Guid.NewGuid().ToString(),
+                    CorrelationId = correlationId
+                };
+
+                factory.LoggedAction(logger, tracingScope, (entry) =>
                 {
                     entry
                         .AddHeader("SomeString", "string")
@@ -42,6 +52,7 @@ namespace PlugAndTrade.DieScheite.Client.Example
                         .AddHeader("SomeBoolF", false);
 
                     entry.Info("Begin job");
+
                     using (var trace = entry.Trace("first-trace"))
                     {
                         entry.Info("Start doing some work...", trace.Id);
@@ -70,6 +81,7 @@ namespace PlugAndTrade.DieScheite.Client.Example
 
                         entry.Info("done", trace.Id);
                     }
+
                     entry.Info("End job");
                 });
 

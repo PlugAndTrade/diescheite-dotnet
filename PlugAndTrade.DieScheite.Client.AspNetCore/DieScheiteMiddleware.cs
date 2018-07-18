@@ -19,9 +19,9 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
 
         public async Task Invoke(HttpContext context, LogEntry entry, IEnumerable<ILogger> loggers)
         {
-            entry.Id = context.TraceIdentifier;
-            entry.CorrelationId = context.Request.Headers["x-correlation-id"].FirstOrDefault() ?? Guid.NewGuid().ToString();
-            entry.ParentId = context.Request.Headers["x-parent-scope-id"].FirstOrDefault();
+            if (entry.Id == null)
+                entry.Id = Guid.NewGuid().ToString();
+
             entry.HttpRequest(new LogEntryHttpRequest
             {
                 Method = context.Request.Method,
