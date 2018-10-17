@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
     <PackageReference Include="PlugAndTrade.TracingScope.AspNetCore" Version="0.2.0" />
+    <PackageReference Include="PlugAndTrade.RabbitMQ" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Console\PlugAndTrade.DieScheite.Client.Console.csproj" />
@@ -15,9 +16,6 @@
     <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Common.Microsoft.Extensions.DependencyInjection\PlugAndTrade.DieScheite.Client.Common.Microsoft.Extensions.DependencyInjection.csproj" />
     <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Console.Microsoft.Extensions.DependencyInjection\PlugAndTrade.DieScheite.Client.Console.Microsoft.Extensions.DependencyInjection.csproj" />
     <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.RabbitMQ.Microsoft.Extensions.DependencyInjection\PlugAndTrade.DieScheite.Client.RabbitMQ.Microsoft.Extensions.DependencyInjection.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="PlugAndTrade.RabbitMQ" Version="2.0.2" />
   </ItemGroup>
 
 </Project>
