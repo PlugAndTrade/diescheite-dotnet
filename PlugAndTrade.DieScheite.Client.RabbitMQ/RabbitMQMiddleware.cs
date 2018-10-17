@@ -29,10 +29,19 @@ namespace PlugAndTrade.DieScheite.Client.RabbitMQ
             });
 
             logEntry.AddHeader("RabbitMQMessageId", message.MessageId);
-
+            logEntry.Route = message.QueueName;
+            logEntry.Protocol = "rabbitmq";
+            logEntry.RabbitMQ = new LogEntryRabbitMQData
+            {
+                QueueName = message.QueueName,
+                MessageId = message.MessageId,
+                Acked = false
+            };
             try
             {
-                return await next(Tuple.Create(message, logEntry));
+                logEntry.RabbitMQ.Acked = await next(Tuple.Create(message, logEntry));
+
+                return logEntry.RabbitMQ.Acked;
             }
             catch (Exception e)
             {
