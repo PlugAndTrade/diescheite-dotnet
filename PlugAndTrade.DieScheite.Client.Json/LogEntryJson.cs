@@ -17,11 +17,14 @@ namespace PlugAndTrade.DieScheite.Client.Json
                 .WriteJsonProperty("serviceId", entry.ServiceId).WriteJsonComma()
                 .WriteJsonProperty("serviceInstanceId", entry.ServiceInstanceId).WriteJsonComma()
                 .WriteJsonProperty("serviceVersion", entry.ServiceVersion).WriteJsonComma()
+                .WriteJsonProperty("protocol", entry.Protocol).WriteJsonComma()
+                .WriteJsonProperty("route", entry.Route).WriteJsonComma()
                 .WriteJsonProperty("timestamp", entry.Timestamp).WriteJsonComma()
                 .WriteJsonProperty("duration", entry.Duration).WriteJsonComma()
                 .WriteJsonProperty("level", entry.Level).WriteJsonComma()
                 .WriteJsonProperty("headers", entry.Headers, WriteJson).WriteJsonComma()
                 .WriteJsonProperty("http", entry.Http, WriteJson).WriteJsonComma()
+                .WriteJsonProperty("rabbitmq", entry.RabbitMQ, WriteJson).WriteJsonComma()
                 .WriteJsonProperty("messages", entry.Messages, WriteJson).WriteJsonComma()
                 .WriteJsonProperty("trace", entry.Trace, WriteJson)
                 .WriteJsonEndObject();
@@ -103,5 +106,16 @@ namespace PlugAndTrade.DieScheite.Client.Json
                 .WriteJsonEndObject()
             .WriteJsonEndObject();
         }
+
+        public static TextWriter WriteJson(TextWriter writer, LogEntryRabbitMQData message)
+        {
+            return writer
+                .WriteJsonStartObject()
+                .WriteJsonProperty("messageId", message.MessageId).WriteJsonComma()
+                .WriteJsonProperty("queueName", message.QueueName).WriteJsonComma()
+                .WriteJsonProperty("acked", message.Acked)
+                .WriteJsonEndObject();
+        }
+
     }
 }

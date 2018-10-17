@@ -11,7 +11,7 @@ namespace PlugAndTrade.DieScheite.Client.Common
 
         public static LogEntry Finalize(this LogEntry entry)
         {
-            entry.Duration = DateTime.UtcNow.AsEpochMillis() - entry.Timestamp; 
+            entry.Duration = DateTime.UtcNow.AsEpochMillis() - entry.Timestamp;
             return entry;
         }
 
@@ -67,6 +67,7 @@ namespace PlugAndTrade.DieScheite.Client.Common
         public static LogEntry Http(this LogEntry entry, LogEntryHttpData http)
         {
             entry.Http = http;
+            entry.Protocol = "http";
             return entry;
         }
 
