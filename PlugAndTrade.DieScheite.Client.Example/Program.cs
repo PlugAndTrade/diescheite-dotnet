@@ -17,8 +17,8 @@ namespace PlugAndTrade.DieScheite.Client.Example
         {
             var factory = new LogEntryFactory("PlugAndTrade.DieScheite.Client.Example", "01", "1.0.0");
             var logger = args.Length == 0
-                ? (ILogger) new ConsoleLogger(LogEntryLevel.Info)
-                : new CombinedLogger(args.Select(a =>
+                ? new ILogger[] { new ConsoleLogger(LogEntryLevel.Info) }
+                : args.Select(a =>
                     a == "rabbitmq" ? (ILogger) new RabbitMQLogger(
                         new RabbitMQClientFactory("localhost", 5672, "die-scheite.client.example")
                         .CreateProducer("diescheite", 1000)
@@ -28,7 +28,7 @@ namespace PlugAndTrade.DieScheite.Client.Example
                     : null
                 )
                 .Where(l => l != null)
-                .ToArray());
+                .ToArray();
 
             var correlationId = Guid.NewGuid().ToString();
 
