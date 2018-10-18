@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using PlugAndTrade.TracingScope;
 
 namespace PlugAndTrade.DieScheite.Client.Common
@@ -32,21 +34,44 @@ namespace PlugAndTrade.DieScheite.Client.Common
             };
         }
 
-        public void LoggedAction(ILogger logger, ITracingScope ts, Action<LogEntry> action)
+        public void LoggedAction(IEnumerable<ILogger> loggers, ITracingScope ts, Action<LogEntry> action)
+            => LoggedAction<int>(loggers, ts, (log) =>
+            {
+                action(log);
+                return 0;
+            });
+
+        public TResult LoggedAction<TResult>(IEnumerable<ILogger> loggers, ITracingScope ts, Func<LogEntry, TResult> action)
+            => LoggedActionAsync(loggers, ts, (log) => Task.FromResult(action(log))).Result;
+
+        public async Task<TResult> LoggedActionAsync<TResult>(IEnumerable<ILogger> loggers, ITracingScope ts, Func<LogEntry, Task<TResult>> action)
         {
             var entry = Init(ts);
             try
             {
-                action(entry);
+                return await action(entry).ConfigureAwait(false);
             }
             catch (Exception e)
             {
                 entry.Error(e.Message, e.StackTrace);
+                throw;
             }
             finally
             {
                 entry.Finalize();
-                logger.Publish(entry);
+                foreach (var logger in loggers)
+                {
+#pragma warning disable 4014
+                    logger
+                        .Publish(entry)
+                        .ContinueWith((t) =>
+                        {
+                            var e = t.Exception;
+                            System.Console.Error.WriteLine($"Error when publishing log entry: {e.Message}");
+                            System.Console.Error.WriteLine(e.StackTrace);
+                        }, TaskContinuationOptions.OnlyOnFaulted);
+#pragma warning restore 4014
+                }
             }
         }
     }
