@@ -44,6 +44,9 @@ namespace PlugAndTrade.DieScheite.Client.Common
         public TResult LoggedAction<TResult>(IEnumerable<ILogger> loggers, ITracingScope ts, Func<LogEntry, TResult> action)
             => LoggedActionAsync(loggers, ts, (log) => Task.FromResult(action(log))).Result;
 
+        public Task LoggedActionAsync(IEnumerable<ILogger> loggers, ITracingScope ts, Func<LogEntry, Task> action)
+            => LoggedActionAsync<int>(loggers, ts, (log) => action(log).ContinueWith(x => 0));
+
         public async Task<TResult> LoggedActionAsync<TResult>(IEnumerable<ILogger> loggers, ITracingScope ts, Func<LogEntry, Task<TResult>> action)
         {
             var entry = Init(ts);
