@@ -109,6 +109,12 @@ namespace PlugAndTrade.DieScheite.Client.Json
 
         public static TextWriter WriteJson(TextWriter writer, LogEntryRabbitMQData message)
         {
+            if (message == null)
+            {
+                writer.Write("null");
+                return writer;
+            }
+
             return writer
                 .WriteJsonStartObject()
                 .WriteJsonProperty("messageId", message.MessageId).WriteJsonComma()
