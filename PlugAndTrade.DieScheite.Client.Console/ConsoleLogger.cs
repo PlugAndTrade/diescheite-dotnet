@@ -69,7 +69,7 @@ namespace PlugAndTrade.DieScheite.Client.Console
         private void PrintTrace(LogEntryTrace trace, ILookup<string, LogEntryTrace> traces, int depth = 1)
         {
             System.Console.WriteLine($" {string.Join("", Enumerable.Repeat(">", depth))} {trace.Name}: {trace.Duration}ms {trace.Timestamp}");
-            foreach (var childTrace in traces[trace.Id]) PrintTrace(childTrace, traces, ++depth);
+            foreach (var childTrace in traces[trace.Id]) PrintTrace(childTrace, traces, depth + 1);
         }
     }
 }
