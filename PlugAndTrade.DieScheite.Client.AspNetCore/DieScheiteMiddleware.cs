@@ -41,6 +41,7 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
             }
             finally
             {
+                entry.Route = context.GetRouteTemplate();
                 entry.HttpResponse(new LogEntryHttpResponse
                 {
                     StatusCode = context.Response.StatusCode

@@ -11,10 +11,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Console\PlugAndTrade.DieScheite.Client.Console.csproj" />
+    <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.JsonConsole\PlugAndTrade.DieScheite.Client.JsonConsole.csproj" />
     <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.RabbitMQ\PlugAndTrade.DieScheite.Client.RabbitMQ.csproj" />
     <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.AspNetCore\PlugAndTrade.DieScheite.Client.AspNetCore.csproj" />
     <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Common.Microsoft.Extensions.DependencyInjection\PlugAndTrade.DieScheite.Client.Common.Microsoft.Extensions.DependencyInjection.csproj" />
     <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Console.Microsoft.Extensions.DependencyInjection\PlugAndTrade.DieScheite.Client.Console.Microsoft.Extensions.DependencyInjection.csproj" />
+    <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.JsonConsole.Microsoft.Extensions.DependencyInjection\PlugAndTrade.DieScheite.Client.JsonConsole.Microsoft.Extensions.DependencyInjection.csproj" />
     <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.RabbitMQ.Microsoft.Extensions.DependencyInjection\PlugAndTrade.DieScheite.Client.RabbitMQ.Microsoft.Extensions.DependencyInjection.csproj" />
   </ItemGroup>
 
