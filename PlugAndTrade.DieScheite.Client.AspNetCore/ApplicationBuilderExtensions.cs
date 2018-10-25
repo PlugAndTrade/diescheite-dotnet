@@ -24,6 +24,12 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
             return mvcBuilder;
         }
 
+        public static IMvcCoreBuilder AddDieScheiteAspNetCore(this IMvcCoreBuilder mvcBuilder)
+        {
+            mvcBuilder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IConfigureOptions<MvcOptions>, DieScheiteMvcOptionsSetup>());
+            return mvcBuilder;
+        }
+
         private class DieScheiteMvcOptionsSetup : IConfigureOptions<MvcOptions>
         {
             public void Configure(MvcOptions options)
