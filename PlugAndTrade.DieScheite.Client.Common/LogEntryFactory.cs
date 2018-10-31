@@ -60,7 +60,7 @@ namespace PlugAndTrade.DieScheite.Client.Common
             }
             catch (Exception e)
             {
-                entry.Error(e.Message, e.StackTrace);
+                entry.Error($"<{e.GetType().Name}> {e.Message}", e.StackTrace);
                 throw;
             }
             finally
