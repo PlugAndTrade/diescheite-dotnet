@@ -64,6 +64,7 @@ namespace PlugAndTrade.DieScheite.Client.Json
                 .WriteJsonProperty("name", attachment.Name).WriteJsonComma()
                 .WriteJsonProperty("contentType", attachment.ContentType).WriteJsonComma()
                 .WriteJsonProperty("contentEncoding", attachment.ContentEncoding).WriteJsonComma()
+                .WriteJsonProperty("headers", attachment.Headers, WriteJson).WriteJsonComma()
                 .WriteJsonProperty("data", attachment.Data)
                 .WriteJsonEndObject();
         }

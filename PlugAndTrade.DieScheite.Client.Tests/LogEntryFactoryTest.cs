@@ -20,10 +20,10 @@ namespace PlugAndTrade.DieScheite.Client.Tests
         {
             var logger = new Mock<ILogger>();
             var factory = new LogEntryFactory("", "", "");
-            await Assert.ThrowsAsync<TestException>(async () => await factory.LoggedActionAsync(new ILogger[] { logger.Object }, new StaticTracingScope(), async (log) =>
+            await Assert.ThrowsAsync<TestException>(async () => await factory.LoggedActionAsync(new ILogger[] { logger.Object }, new StaticTracingScope(), new Func<LogEntry, Task>(log =>
             {
                 throw new TestException("Foobar");
-            }));
+            })));
 
             logger.Verify(x => x.Publish(It.Is<LogEntry>(log =>
                 400 >= log.Level

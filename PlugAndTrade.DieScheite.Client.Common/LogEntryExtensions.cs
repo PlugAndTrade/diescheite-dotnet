@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -34,33 +35,55 @@ namespace PlugAndTrade.DieScheite.Client.Common
         public static LogEntry AddHeader(this LogEntry entry, string key, bool value) =>
             entry.AddHeader(key, (object) value);
 
-        public static LogEntry Log(this LogEntry entry, int level, string message, string stacktrace = null, string traceId = null)
+        public static LogEntryMessage Log(this LogEntry entry, int level, string message, string stacktrace = null, string traceId = null)
         {
-            entry.Messages.Add(new LogEntryMessage
+            var msg = new LogEntryMessage
             {
               Level = level,
               Message = message,
               Stacktrace = stacktrace,
               TraceId = traceId
-            });
-            return entry;
+            };
+            entry.Messages.Add(msg);
+            return msg;
         }
-        public static LogEntry Log(this LogEntry entry, LogEntryLevel level, string message, string stacktrace = null, string traceId = null) =>
+
+        public static LogEntryMessage Log(this LogEntry entry, LogEntryLevel level, string message, string stacktrace = null, string traceId = null) =>
             entry.Log((int) level, message, stacktrace, traceId);
 
-        public static LogEntry Debug(this LogEntry entry, string message, string traceId = null) =>
+        public static LogEntryMessage Debug(this LogEntry entry, string message, string traceId = null) =>
             entry.Log((int) LogEntryLevel.Debug, message, null, traceId);
-        public static LogEntry Info(this LogEntry entry, string message, string traceId = null) =>
+
+        public static LogEntryMessage Info(this LogEntry entry, string message, string traceId = null) =>
             entry.Log((int) LogEntryLevel.Info, message, null, traceId);
-        public static LogEntry Warning(this LogEntry entry, string message, string traceId = null) =>
+
+        public static LogEntryMessage Warning(this LogEntry entry, string message, string traceId = null) =>
             entry.Log((int) LogEntryLevel.Warning, message, null, traceId);
-        public static LogEntry Error(this LogEntry entry, string message, string stacktrace = null, string traceId = null) =>
+
+        public static LogEntryMessage Error(this LogEntry entry, string message, string stacktrace = null, string traceId = null) =>
             entry.Log((int) LogEntryLevel.Error, message, stacktrace, traceId);
-        public static LogEntry Critical(this LogEntry entry, string message, string stacktrace = null, string traceId = null) =>
+
+        public static LogEntryMessage Critical(this LogEntry entry, string message, string stacktrace = null, string traceId = null) =>
             entry.Log((int) LogEntryLevel.Critical, message, stacktrace, traceId);
+
+        public static LogEntryMessage Attach(this LogEntryMessage message, string name, string contentType, string contentEncoding, byte[] data, ILookup<string, object> headers)
+        {
+            var attachment = new LogEntryAttachment
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = name,
+                ContentType = contentType,
+                ContentEncoding = contentEncoding,
+                Headers = headers?.SelectMany(g => g.Select(v => new KeyValuePair<string, object>(g.Key, v))).ToArray() ?? new KeyValuePair<string, object>[0],
+                Data = data
+            };
+            message.Attachments.Add(attachment);
+            return message;
+        }
 
         public static LogEntryActiveTrace Trace(this LogEntry entry, string name) =>
             new LogEntryActiveTrace(name, null, (trace) => entry.Trace.Add(trace));
+
         public static LogEntryActiveTrace Trace(this LogEntry entry, string name, LogEntryActiveTrace parent) =>
             new LogEntryActiveTrace(name, parent, (trace) => entry.Trace.Add(trace));
 

@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Common\PlugAndTrade.DieScheite.Client.Common.csproj" />
+    <ProjectReference Include="..\PlugAndTrade.DieScheite.Client.Json\PlugAndTrade.DieScheite.Client.Json.csproj" />
   </ItemGroup>
 
 </Project>
