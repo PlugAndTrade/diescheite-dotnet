@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PlugAndTrade.DieScheite.Client.Common;
+
 namespace PlugAndTrade.DieScheite.Client.Example.AspNetCore.Controllers
 {
     public class RoutedController

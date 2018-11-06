@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using PlugAndTrade.DieScheite.Client.Common;
 
 namespace PlugAndTrade.DieScheite.Client.Example.AspNetCore.Controllers
@@ -11,9 +12,12 @@ namespace PlugAndTrade.DieScheite.Client.Example.AspNetCore.Controllers
     public class ValuesController : Controller
     {
         private readonly LogEntry _log;
-        public ValuesController(LogEntry log)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public ValuesController(LogEntry log, IHttpContextAccessor httpContextAccessor)
         {
             _log = log;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET api/values
@@ -31,10 +35,26 @@ namespace PlugAndTrade.DieScheite.Client.Example.AspNetCore.Controllers
             return "value";
         }
 
+        [HttpPost("server_error")]
+        public IActionResult ServerError()
+        {
+            return new ContentResult()
+            {
+                Content = "foobar",
+                StatusCode = 500
+            };
+        }
+
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult Post([FromBody] string value)
         {
+            _log.Info("Set dat value");
+            return new ContentResult()
+            {
+                Content = "foobar",
+                StatusCode = 201
+            };
         }
 
         // PUT api/values/5

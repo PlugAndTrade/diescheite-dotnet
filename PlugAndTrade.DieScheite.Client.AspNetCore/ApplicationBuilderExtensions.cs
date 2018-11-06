@@ -12,10 +12,44 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
 {
     public static class ApplicationBuilderExtensions
     {
+        public static IApplicationBuilder UseDieScheite(this IApplicationBuilder app, Func<HttpContext, bool> shouldLogRequestBody, string[] censoredHeaders)
+        {
+            return app
+                .UseMiddleware<DieScheiteMiddleware>()
+                .UseMiddleware<DieScheiteAdditionalDataMiddleware>(
+                    shouldLogRequestBody,
+                    censoredHeaders
+                );
+        }
+
+        public static IApplicationBuilder UseDieScheite(this IApplicationBuilder app, string[] censoredHeaders)
+        {
+            return app
+                .UseMiddleware<DieScheiteMiddleware>()
+                .UseMiddleware<DieScheiteAdditionalDataMiddleware>(
+                    DieScheiteAdditionalDataMiddleware.LogRequestOnServerError,
+                    censoredHeaders
+                );
+        }
+
+        public static IApplicationBuilder UseDieScheite(this IApplicationBuilder app, Func<HttpContext, bool> shouldLogRequestBody)
+        {
+            return app
+                .UseMiddleware<DieScheiteMiddleware>()
+                .UseMiddleware<DieScheiteAdditionalDataMiddleware>(
+                    shouldLogRequestBody,
+                    DieScheiteAdditionalDataMiddleware.DefaultCensoredHeaders
+                );
+        }
+
         public static IApplicationBuilder UseDieScheite(this IApplicationBuilder app)
         {
-            app.UseMiddleware<DieScheiteMiddleware>();
-            return app;
+            return app
+                .UseMiddleware<DieScheiteMiddleware>()
+                .UseMiddleware<DieScheiteAdditionalDataMiddleware>(
+                    DieScheiteAdditionalDataMiddleware.LogRequestOnServerError,
+                    DieScheiteAdditionalDataMiddleware.DefaultCensoredHeaders
+                );
         }
 
         public static IMvcBuilder AddDieScheiteAspNetCore(this IMvcBuilder mvcBuilder)

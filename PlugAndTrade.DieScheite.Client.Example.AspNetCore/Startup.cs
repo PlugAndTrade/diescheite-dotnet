@@ -49,7 +49,10 @@ namespace PlugAndTrade.DieScheite.Client.Example.AspNetCore
         {
             app
                 .UseTracingScope()
-                .UseDieScheite()
+                //.UseDieScheite()
+                //.UseDieScheite((ctx) => true)
+                //.UseDieScheite(new [] { "Host" })
+                .UseDieScheite((ctx) => true, new [] { "Host" })
                 .UseMvc(router =>
                 {
                     router.MapRoute(

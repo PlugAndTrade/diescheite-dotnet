@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,8 +27,8 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
                 Uri = $"{context.Request.Path}{context.Request.QueryString.ToString()}",
                 Host = context.Request.Host.ToString(),
             });
+            entry.HttpResponse(new LogEntryHttpResponse());
 
-            var requestBody = await GetBody(context.Request);
             try
             {
                 await _next(context);
@@ -42,23 +41,7 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
             finally
             {
                 entry.Route = context.GetRouteTemplate();
-                entry.HttpResponse(new LogEntryHttpResponse
-                {
-                    StatusCode = context.Response.StatusCode
-                });
-
-                if (context.Response.StatusCode >= 400)
-                {
-                    entry.Http.Request.Body = requestBody.Length > 0 ? requestBody : null;
-                    foreach (var header in context.Request.Headers)
-                    {
-                        entry.Http.Request.Headers.Add(new KeyValuePair<string, object>(header.Key, header.Value.First()));
-                    }
-                    foreach (var header in context.Response.Headers)
-                    {
-                        entry.Http.Response.Headers.Add(new KeyValuePair<string, object>(header.Key, header.Value.First()));
-                    }
-                }
+                entry.Http.Response.StatusCode = context.Response.StatusCode;
 
                 entry.Finalize();
                 foreach (var logger in loggers)
@@ -75,23 +58,6 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
 #pragma warning restore 4014
                 }
             }
-        }
-
-        private async Task<byte[]> GetBody(HttpRequest request)
-        {
-            var mem = new MemoryStream();
-            await request.Body.CopyToAsync(mem);
-            var res = mem.ToArray();
-            if (!request.Body.CanSeek)
-            {
-                mem.Seek(0, SeekOrigin.Begin);
-                request.Body = mem;
-            }
-            else
-            {
-                request.Body.Seek(0, SeekOrigin.Begin);
-            }
-            return res;
         }
     }
 }
