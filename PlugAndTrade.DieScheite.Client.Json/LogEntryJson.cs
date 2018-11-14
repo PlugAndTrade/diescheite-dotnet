@@ -52,6 +52,7 @@ namespace PlugAndTrade.DieScheite.Client.Json
                 .WriteJsonProperty("level", message.Level).WriteJsonComma()
                 .WriteJsonProperty("message", message.Message).WriteJsonComma()
                 .WriteJsonProperty("stacktrace", message.Stacktrace).WriteJsonComma()
+                .WriteJsonProperty("traceId", message.TraceId).WriteJsonComma()
                 .WriteJsonProperty("attachments", message.Attachments, WriteJson)
                 .WriteJsonEndObject();
         }
