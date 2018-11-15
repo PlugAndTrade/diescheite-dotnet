@@ -6,7 +6,7 @@
     <PackageId>PlugAndTrade.DieScheite.Client.JsonConsole.Microsoft.Extensions.DependencyInjection</PackageId>
     <Title>PlugAndTrade.DieScheite.Client.JsonConsole.Microsoft.Extensions.DependencyInjection</Title>
     <Description>DieScheite JsonConsole common DI implementation for Microsoft.Extensions.DependencyInjection</Description>
-    <PackageVersion>0.7.1</PackageVersion>
+    <PackageVersion>0.7.2</PackageVersion>
     <Authors>developers@plug-n-trade.com</Authors>
   </PropertyGroup>
   <ItemGroup>

@@ -22,6 +22,7 @@ namespace PlugAndTrade.DieScheite.Client.Json
                 .WriteJsonProperty("timestamp", entry.Timestamp).WriteJsonComma()
                 .WriteJsonProperty("duration", entry.Duration).WriteJsonComma()
                 .WriteJsonProperty("level", entry.Level).WriteJsonComma()
+                .WriteJsonProperty("levelCategory", entry.LevelCategory).WriteJsonComma()
                 .WriteJsonProperty("headers", entry.Headers, WriteJson).WriteJsonComma()
                 .WriteJsonProperty("http", entry.Http, WriteJson).WriteJsonComma()
                 .WriteJsonProperty("rabbitmq", entry.RabbitMQ, WriteJson).WriteJsonComma()

@@ -25,6 +25,7 @@ namespace PlugAndTrade.DieScheite.Client.RabbitMQ
             _producer.Publish("application/json", "gzip", Serialize(entry), "", (props) =>
             {
                 props.Headers.Add("Level", entry.Level);
+                props.Headers.Add("LevelCategory", entry.LevelCategory);
                 props.Headers.Add("ServiceId", entry.ServiceId);
                 foreach (var pair in entry.Headers)
                 {

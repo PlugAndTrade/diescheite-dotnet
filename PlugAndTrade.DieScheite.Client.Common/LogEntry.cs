@@ -16,6 +16,7 @@ namespace PlugAndTrade.DieScheite.Client.Common
         public long Timestamp { get; set; }
         public long Duration { get; set; }
         public int Level => Messages.Any() ? Messages.Max(m => m.Level) : 0;
+        public string LevelCategory => LogEntryLevelHelper.GetCategory(Level);
         public IList<KeyValuePair<string, object>> Headers { get; }
         public IList<LogEntryTrace> Trace { get; }
         public IList<LogEntryMessage> Messages { get; }
