@@ -10,8 +10,6 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
 {
     public class DieScheiteAdditionalDataMiddleware
     {
-        public static Func<HttpContext, bool> LogRequestOnServerError = context => context.Response.StatusCode >= 500;
-        public static string[] DefaultCensoredHeaders = new [] { "Authorization", "User-Agent" };
 
         private readonly RequestDelegate _next;
         private readonly Func<HttpContext, bool> _shouldLogRequestBody;
@@ -19,12 +17,11 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
 
         public DieScheiteAdditionalDataMiddleware(
             RequestDelegate next,
-            Func<HttpContext, bool> shouldLogRequestBody,
-            string[] censoredHeaders)
+            DieScheiteAspNetCoreSettings settings)
         {
             _next = next;
-            _shouldLogRequestBody = shouldLogRequestBody;
-            _censoredHeaders = new HashSet<string>(censoredHeaders);
+            _shouldLogRequestBody = settings.ShouldLogRequestBody;
+            _censoredHeaders = new HashSet<string>(settings.CensoredHeaders);
         }
 
         public async Task Invoke(HttpContext context, LogEntry entry)

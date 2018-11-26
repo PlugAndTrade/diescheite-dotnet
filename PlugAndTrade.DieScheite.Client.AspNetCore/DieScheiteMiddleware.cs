@@ -10,10 +10,12 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
     public class DieScheiteMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly HashSet<string> _ignoreRoutes;
 
-        public DieScheiteMiddleware(RequestDelegate next)
+        public DieScheiteMiddleware(RequestDelegate next, DieScheiteAspNetCoreSettings settings)
         {
             _next = next;
+            _ignoreRoutes = new HashSet<string>(settings.IgnoreRoutes);
         }
 
         public async Task Invoke(HttpContext context, LogEntry entry, IEnumerable<ILogger> loggers)
@@ -41,21 +43,25 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
             finally
             {
                 entry.Route = context.GetRouteTemplate();
-                entry.Http.Response.StatusCode = context.Response.StatusCode;
 
-                entry.Finalize();
-                foreach (var logger in loggers)
+                if (!_ignoreRoutes.Contains(entry.Route))
                 {
+                    entry.Http.Response.StatusCode = context.Response.StatusCode;
+
+                    entry.Finalize();
+                    foreach (var logger in loggers)
+                    {
 #pragma warning disable 4014
-                    logger
-                        .Publish(entry)
-                        .ContinueWith((t) =>
-                        {
-                            var e = t.Exception;
-                            System.Console.Error.WriteLine($"Error when publishing log entry: {e.Message}");
-                            System.Console.Error.WriteLine(e.StackTrace);
-                        }, TaskContinuationOptions.OnlyOnFaulted);
+                        logger
+                            .Publish(entry)
+                            .ContinueWith((t) =>
+                            {
+                                var e = t.Exception;
+                                System.Console.Error.WriteLine($"Error when publishing log entry: {e.Message}");
+                                System.Console.Error.WriteLine(e.StackTrace);
+                            }, TaskContinuationOptions.OnlyOnFaulted);
 #pragma warning restore 4014
+                    }
                 }
             }
         }

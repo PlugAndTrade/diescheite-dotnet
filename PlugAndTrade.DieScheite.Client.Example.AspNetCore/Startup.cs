@@ -52,7 +52,11 @@ namespace PlugAndTrade.DieScheite.Client.Example.AspNetCore
                 //.UseDieScheite()
                 //.UseDieScheite((ctx) => true)
                 //.UseDieScheite(new [] { "Host" })
-                .UseDieScheite((ctx) => true, new [] { "Host" })
+                //.UseDieScheite((ctx) => true, new [] { "Host" })
+                .UseDieScheite(new DieScheiteAspNetCoreSettings
+                {
+                    IgnoreRoutes = new [] { "healthcheck" }
+                })
                 .UseMvc(router =>
                 {
                     router.MapRoute(
