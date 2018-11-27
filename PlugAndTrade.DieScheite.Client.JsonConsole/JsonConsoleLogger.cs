@@ -10,14 +10,16 @@ namespace PlugAndTrade.DieScheite.Client.JsonConsole
 {
     public class JsonConsoleLogger : ILogger
     {
-        public JsonConsoleLogger()
-        {
-        }
-
         public Task Publish(LogEntry entry) => Task.Run(() =>
         {
-            LogEntryJson.WriteJson(Console.Out, entry);
-            Console.WriteLine();
+            using (var mem = new MemoryStream())
+            {
+                using (var writer = new StreamWriter(mem))
+                {
+                    LogEntryJson.WriteJson(writer, entry);
+                }
+                Console.WriteLine(System.Text.Encoding.UTF8.GetString(mem.ToArray()));
+            }
 
             return Task.CompletedTask;
         });
