@@ -24,7 +24,7 @@ namespace PlugAndTrade.DieScheite.Client.RabbitMQ
             var logEntry = _logEntryFactory.Init(new StaticTracingScope
             {
                 ScopeId = Guid.NewGuid().ToString(),
-                CorrelationId = message.CorrelationId ?? Guid.NewGuid().ToString(),
+                CorrelationId = message.CorrelationId ?? GetHeader(message, "X-Correlation-Id") ?? Guid.NewGuid().ToString(),
                 ParentScopeId = GetHeader(message, "X-Parent-Scope-Id")
             });
 
@@ -73,7 +73,7 @@ namespace PlugAndTrade.DieScheite.Client.RabbitMQ
         private static string GetHeader(Message msg, string key, string def = null)
         {
             object val;
-            return msg.Headers.TryGetValue(key, out val) ? val as string: def;
+            return msg.Headers.TryGetValue(key, out val) ? val as string : def;
         }
     }
 }
