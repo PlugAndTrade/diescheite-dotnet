@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using PlugAndTrade.DieScheite.Client.Common;
 using PlugAndTrade.DieScheite.Client.Console;
 using PlugAndTrade.DieScheite.Client.JsonConsole;
@@ -32,61 +33,58 @@ namespace PlugAndTrade.DieScheite.Client.Example
 
             var correlationId = Guid.NewGuid().ToString();
 
-            while (true)
+            var tracingScope = new StaticTracingScope
             {
-                var tracingScope = new StaticTracingScope
+                ScopeId = Guid.NewGuid().ToString(),
+                ParentScopeId = Guid.NewGuid().ToString(),
+                CorrelationId = correlationId
+            };
+
+            factory.LoggedAction(logger, tracingScope, (entry) =>
+            {
+                entry
+                    .AddHeader("SomeString", "string")
+                    .AddHeader("SomeInt", 1)
+                    .AddHeader("SomeLong", 1000000000000L)
+                    .AddHeader("SomeDecimal", 1.1)
+                    .AddHeader("SomeBoolT", true)
+                    .AddHeader("SomeBoolF", false);
+
+                entry.Info("Begin job");
+
+                using (var trace = entry.Trace("first-trace"))
                 {
-                    ScopeId = Guid.NewGuid().ToString(),
-                    ParentScopeId = Guid.NewGuid().ToString(),
-                    CorrelationId = correlationId
-                };
+                    entry.Info("Start doing some work...", trace.Id);
+                    DoWork();
+                    entry.Info("done", trace.Id);
+                }
 
-                factory.LoggedAction(logger, tracingScope, (entry) =>
+                using (var trace = entry.Trace("second-trace"))
                 {
-                    entry
-                        .AddHeader("SomeString", "string")
-                        .AddHeader("SomeInt", 1)
-                        .AddHeader("SomeLong", 1000000000000L)
-                        .AddHeader("SomeDecimal", 1.1)
-                        .AddHeader("SomeBoolT", true)
-                        .AddHeader("SomeBoolF", false);
-
-                    entry.Info("Begin job");
-
-                    using (var trace = entry.Trace("first-trace"))
+                    entry.Info("Start doing faiing work...", trace.Id);
+                    try
                     {
-                        entry.Info("Start doing some work...", trace.Id);
-                        DoWork();
-                        entry.Info("done", trace.Id);
+                      DoError();
+                    }
+                    catch (Exception e)
+                    {
+                      entry.Error(e.Message, e.StackTrace, trace.Id);
                     }
 
-                    using (var trace = entry.Trace("second-trace"))
+                    entry.Info("Nested tracing...", trace.Id);
+                    using (var nestedTrace = entry.Trace("nested-trace", trace))
                     {
-                        entry.Info("Start doing faiing work...", trace.Id);
-                        try
-                        {
-                          DoError();
-                        }
-                        catch (Exception e)
-                        {
-                          entry.Error(e.Message, e.StackTrace, trace.Id);
-                        }
-
-                        entry.Info("Nested tracing...", trace.Id);
-                        using (var nestedTrace = entry.Trace("nested-trace", trace))
-                        {
-                            entry.Info("in nested trace", nestedTrace.Id);
-                        }
-                        entry.Info("nested done", trace.Id);
-
-                        entry.Info("done", trace.Id);
+                        entry.Info("in nested trace", nestedTrace.Id);
                     }
+                    entry.Info("nested done", trace.Id);
 
-                    entry.Info("End job");
-                });
+                    entry.Info("done", trace.Id);
+                }
 
-                Thread.Sleep(1000);
-            }
+                entry.Info("End job");
+            }, true);
+
+            Thread.Sleep(1000);
         }
 
         public static int DoWork()

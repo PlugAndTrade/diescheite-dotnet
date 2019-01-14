@@ -34,24 +34,32 @@ namespace PlugAndTrade.DieScheite.Client.Common
             };
         }
 
-        public void LoggedAction(IEnumerable<ILogger> loggers, ITracingScope ts, Action<LogEntry> action)
+        public void LoggedAction(IEnumerable<ILogger> loggers, ITracingScope ts, Action<LogEntry> action, bool awaitPublish = false)
             => LoggedAction<int>(loggers, ts, (log) =>
             {
                 action(log);
                 return 0;
-            });
+            }, awaitPublish);
 
-        public TResult LoggedAction<TResult>(IEnumerable<ILogger> loggers, ITracingScope ts, Func<LogEntry, TResult> action)
-            => LoggedActionAsync(loggers, ts, (log) => Task.FromResult(action(log))).Result;
+        public TResult LoggedAction<TResult>(IEnumerable<ILogger> loggers, ITracingScope ts, Func<LogEntry, TResult> action, bool awaitPublish = false)
+            => LoggedActionAsync(loggers, ts, (log) => Task.FromResult(action(log)), awaitPublish).Result;
 
-        public Task LoggedActionAsync(IEnumerable<ILogger> loggers, ITracingScope ts, Func<LogEntry, Task> action)
+        public Task LoggedActionAsync(IEnumerable<ILogger> loggers, ITracingScope ts, Func<LogEntry, Task> action, bool awaitPublish = false)
             => LoggedActionAsync<int>(loggers, ts, async (log) =>
             {
-                await action(log);
+                await action(log).ConfigureAwait(false);
                 return 0;
-            });
+            }, awaitPublish);
 
-        public async Task<TResult> LoggedActionAsync<TResult>(IEnumerable<ILogger> loggers, ITracingScope ts, Func<LogEntry, Task<TResult>> action)
+        public async Task<TResult> LoggedActionAsync<TResult>(IEnumerable<ILogger> loggers, ITracingScope ts, Func<LogEntry, Task<TResult>> action, bool awaitPublish = false)
+        {
+            return await LoggedActionAsync(loggers, ts, action, t =>
+            {
+                return awaitPublish ? t : Task.CompletedTask;
+            }).ConfigureAwait(false);
+        }
+
+        private async Task<TResult> LoggedActionAsync<TResult>(IEnumerable<ILogger> loggers, ITracingScope ts, Func<LogEntry, Task<TResult>> action, Func<Task, Task> onPublish)
         {
             var entry = Init(ts);
             try
@@ -69,14 +77,15 @@ namespace PlugAndTrade.DieScheite.Client.Common
                 foreach (var logger in loggers)
                 {
 #pragma warning disable 4014
-                    logger
-                        .Publish(entry)
+                    var pubTask = logger.Publish(entry);
+                    pubTask
                         .ContinueWith((t) =>
                         {
                             var e = t.Exception;
                             System.Console.Error.WriteLine($"Error when publishing log entry: {e.Message}");
                             System.Console.Error.WriteLine(e.StackTrace);
                         }, TaskContinuationOptions.OnlyOnFaulted);
+                    await onPublish(pubTask).ConfigureAwait(false);
 #pragma warning restore 4014
                 }
             }

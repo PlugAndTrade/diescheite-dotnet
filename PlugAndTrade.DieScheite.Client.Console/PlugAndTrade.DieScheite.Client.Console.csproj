@@ -4,7 +4,7 @@
     <PackageId>PlugAndTrade.DieScheite.Client.Console</PackageId>
     <Title>PlugAndTrade.DieScheite.Client.Console</Title>
     <Description>Logging Die Scheite log entries to console</Description>
-    <PackageVersion>0.7.2</PackageVersion>
+    <PackageVersion>0.7.3</PackageVersion>
     <Authors>developers@plug-n-trade.com</Authors>
   </PropertyGroup>
   <ItemGroup>

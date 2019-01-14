@@ -5,7 +5,7 @@
     <PackageId>PlugAndTrade.DieScheite.Client.Common.Microsoft.Extensions.DependencyInjection</PackageId>
     <Title>PlugAndTrade.DieScheite.Client.Common.Microsoft.Extensions.DependencyInjection</Title>
     <Description>DieScheite common DI implementation for Microsoft.Extensions.DependencyInjection</Description>
-    <PackageVersion>0.7.2</PackageVersion>
+    <PackageVersion>0.7.3</PackageVersion>
     <Authors>developers@plug-n-trade.com</Authors>
   </PropertyGroup>
   <ItemGroup>
