@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.3" />
     <PackageReference Include="PlugAndTrade.TracingScope.AspNetCore" Version="0.2.0" />
     <PackageReference Include="PlugAndTrade.RabbitMQ" Version="2.2.0" />
   </ItemGroup>
