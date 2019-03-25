@@ -1,0 +1,65 @@
+steps:
+- name: 'microsoft/dotnet:2.1-sdk'
+  id: Restore nuget packages
+  args:
+  - 'dotnet'
+  - 'restore'
+  env:
+  - 'DOTNET_CLI_TELEMETRY_OPTOUT=1'
+  - 'DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1'
+- name: 'microsoft/dotnet:2.1-sdk'
+  id: Build projects in solution
+  args:
+  - 'dotnet'
+  - 'build'
+  - '-c'
+  - 'Release'
+  - '--no-restore'
+  env:
+  - 'DOTNET_CLI_TELEMETRY_OPTOUT=1'
+  - 'DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1'
+- name: 'microsoft/dotnet:2.1-sdk'
+  id: Run test projects in solution
+  args:
+  - 'dotnet'
+  - 'test'
+  - '-c'
+  - 'Release'
+  - '--no-restore'
+  - '--no-build'
+  env:
+  - 'DOTNET_CLI_TELEMETRY_OPTOUT=1'
+  - 'DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1'
+- name: 'microsoft/dotnet:2.1-sdk'
+  id: Pack packable projects in solution
+  args:
+  - 'dotnet'
+  - 'pack'
+  - '-c'
+  - 'Release'
+  - '--no-restore'
+  - '--no-build'
+  - '--include-source'
+  - '--include-symbols'
+  - '--output'
+  - '../release'
+  env:
+  - 'DOTNET_CLI_TELEMETRY_OPTOUT=1'
+  - 'DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1'
+- name: 'microsoft/dotnet:2.1-sdk'
+  id: Publish packages to myget feed
+  args:
+  - 'bash'
+  - '-c'
+  - 'if [ ! -z "$TAG_NAME" ]; then dotnet nuget push ./release/ -k $$MYGET_${_MYGET_FEED}_API_KEY -s https://www.myget.org/F/plugandtrade-${_MYGET_FEED}/api/v2/package -ss https://www.myget.org/F/plugandtrade-${_MYGET_FEED}/symbols/api/v2/package; fi'
+  env:
+  - 'DOTNET_CLI_TELEMETRY_OPTOUT=1'
+  - 'DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1'
+  secretEnv:
+  - 'MYGET_packages_API_KEY'
+  - 'MYGET_ecommerce_API_KEY'
+secrets:
+- kmsKeyName: projects/plug-and-trade/locations/global/keyRings/cloud-build-secrets/cryptoKeys/symmetric-secrets
+  secretEnv:
+    MYGET_packages_API_KEY: 'CiQAPuD9xhZSqnjHiID6drwZxHbRdwdKbrADq593wk6N8Td9dkISTQC2NNZIfzQ0JFOjxhI+rSTpYtck+ghCCIf4THzXAzwCDmyq8OcDuhJ/rpui6mVutcenyPDebcIMAJsXtqivwTD5at2fShRRXQHEs05c'
+    MYGET_ecommerce_API_KEY: 'CiQAPuD9xjtjRGnXM5UsCw0JdYxsF5bHdGoruvGPd5u7oPDTtkgSTQC2NNZIuoU9F2N4I769EhQqzx/ND/bHi2x28JDYTq3c/yHDKC7hKXcGvb4XIxMMjxTg1IJG1Q40dWO0UWncWDSfMYyBasUdcp31eaFe'
