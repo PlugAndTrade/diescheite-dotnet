@@ -58,8 +58,10 @@ steps:
   secretEnv:
   - 'MYGET_packages_API_KEY'
   - 'MYGET_ecommerce_API_KEY'
+  - 'MYGET_integration_API_KEY'
 secrets:
 - kmsKeyName: projects/plug-and-trade/locations/global/keyRings/cloud-build-secrets/cryptoKeys/symmetric-secrets
   secretEnv:
     MYGET_packages_API_KEY: 'CiQAPuD9xhZSqnjHiID6drwZxHbRdwdKbrADq593wk6N8Td9dkISTQC2NNZIfzQ0JFOjxhI+rSTpYtck+ghCCIf4THzXAzwCDmyq8OcDuhJ/rpui6mVutcenyPDebcIMAJsXtqivwTD5at2fShRRXQHEs05c'
     MYGET_ecommerce_API_KEY: 'CiQAPuD9xjtjRGnXM5UsCw0JdYxsF5bHdGoruvGPd5u7oPDTtkgSTQC2NNZIuoU9F2N4I769EhQqzx/ND/bHi2x28JDYTq3c/yHDKC7hKXcGvb4XIxMMjxTg1IJG1Q40dWO0UWncWDSfMYyBasUdcp31eaFe'
+    MYGET_integration_API_KEY: 'CiQAPuD9xnO2ZlpbP5/kYanw2IqpRdpLOTySWyr5xaVgFucdAPkSTQC2NNZIAKKrSn15iGRu43wXK6QuPBEoiadIeHjTWcn70IPoB9pZSi/KjYEsSRrjgGuiBXivqa5IsPqqo1OUS2jm7RqQnT7JC+cr3L9L'
