@@ -4,7 +4,7 @@
     <PackageId>PlugAndTrade.DieScheite.Client.Common</PackageId>
     <Title>PlugAndTrade.DieScheite.Client.Common</Title>
     <Description>Common logging definitions for Die Scheite</Description>
-    <PackageVersion>0.7.6</PackageVersion>
+    <PackageVersion>0.7.7</PackageVersion>
     <Authors>developers@plug-n-trade.com</Authors>
   </PropertyGroup>
 
