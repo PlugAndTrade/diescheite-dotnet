@@ -67,7 +67,7 @@ namespace PlugAndTrade.DieScheite.Client.RabbitMQ
             }
         }
 
-        public static Func<Tuple<T, LogEntry>, Func<Tuple<TNext, LogEntry>, Task<bool>>, Task<bool>> WrapLogEntry<T, TNext>(Func<T, Func<TNext, Task<bool>>, Task<bool>> middleware) =>
+        public static Func<Tuple<T, LogEntry>, Func<Tuple<TNext, LogEntry>, Task<ConsumerResult>>, Task<ConsumerResult>> WrapLogEntry<T, TNext>(Func<T, Func<TNext, Task<ConsumerResult>>, Task<ConsumerResult>> middleware) =>
             (message, next) => middleware(message.Item1, (TNext nextMessage) => next(Tuple.Create(nextMessage, message.Item2)));
 
         private static string GetHeader(Message msg, string key, string def = null)
