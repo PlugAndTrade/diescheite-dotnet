@@ -51,7 +51,7 @@ steps:
   args:
   - 'bash'
   - '-c'
-  - 'if [[ "$TAG_NAME" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-.*)?$ ]]; then dotnet nuget push /workspace/release/ -k $$MYGET_${_MYGET_FEED}_API_KEY -s https://www.myget.org/F/plugandtrade-${_MYGET_FEED}/api/v2/package -ss https://www.myget.org/F/plugandtrade-${_MYGET_FEED}/symbols/api/v2/package; else echo "Not a semver tag, skipping..."; fi'
+  - 'if [[ "$TAG_NAME" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-.*)?$ ]]; then find /workspace/release -name "*.nupkg" -not -name "*.symbols.nupkg" -exec dotnet nuget push "{}" -k $$MYGET_${_MYGET_FEED}_API_KEY -s https://www.myget.org/F/plugandtrade-${_MYGET_FEED}/api/v2/package -ss https://www.myget.org/F/plugandtrade-${_MYGET_FEED}/symbols/api/v2/package \; ; else echo "Not a semver tag, skipping..."; fi'
   env:
   - 'DOTNET_CLI_TELEMETRY_OPTOUT=1'
   - 'DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1'
