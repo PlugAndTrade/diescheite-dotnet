@@ -19,7 +19,7 @@ namespace PlugAndTrade.DieScheite.Client.RabbitMQ
             _loggers = loggers;
         }
 
-        public async Task<bool> Invoke(Message message, Func<Tuple<Message, LogEntry>, Task<bool>> next)
+        public async Task<ConsumerResult> Invoke(Message message, Func<Tuple<Message, LogEntry>, Task<ConsumerResult>> next)
         {
             var logEntry = _logEntryFactory.Init(new StaticTracingScope
             {
@@ -39,9 +39,9 @@ namespace PlugAndTrade.DieScheite.Client.RabbitMQ
             };
             try
             {
-                logEntry.RabbitMQ.Acked = await next(Tuple.Create(message, logEntry));
-
-                return logEntry.RabbitMQ.Acked;
+                var res = await next(Tuple.Create(message, logEntry));
+                logEntry.RabbitMQ.Acked = res == ConsumerResult.Ack;
+                return res;
             }
             catch (Exception e)
             {
