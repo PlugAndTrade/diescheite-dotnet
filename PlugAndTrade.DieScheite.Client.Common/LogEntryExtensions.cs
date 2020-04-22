@@ -66,6 +66,22 @@ namespace PlugAndTrade.DieScheite.Client.Common
         public static LogEntryMessage Critical(this LogEntry entry, string message, string stacktrace = null, string traceId = null) =>
             entry.Log((int) LogEntryLevel.Critical, message, stacktrace, traceId);
 
+        public static LogEntryMessage Exception(this LogEntry entry, string message, Exception e, LogEntryLevel level = LogEntryLevel.Error, string traceId = null) =>
+            entry.Log((int) level, $"{message} ({GetNestedMessages(e)})", GetNestedStackTraces(e), traceId);
+
+        private static string GetNestedMessages(Exception e)
+        {
+            var msg = $"<{e.GetType().Name}> {e.Message}";
+            return e.InnerException == null
+                ? msg
+                : $"{msg} ({GetNestedMessages(e.InnerException)})";
+        }
+
+        private static string GetNestedStackTraces(Exception e) =>
+            e.InnerException == null
+                ? e.StackTrace
+                : $"{e.StackTrace}\n------- INNER STACK TRACE -------\n{GetNestedStackTraces(e.InnerException)}";
+
         public static LogEntryMessage Attach(this LogEntryMessage message, string name, string contentType, string contentEncoding, byte[] data, ILookup<string, object> headers)
         {
             var attachment = new LogEntryAttachment
