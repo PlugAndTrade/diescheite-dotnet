@@ -37,7 +37,7 @@ namespace PlugAndTrade.DieScheite.Client.AspNetCore
             }
             catch (Exception e)
             {
-                entry.Error($"Uncaught exception: {e.Message}", e.StackTrace);
+                entry.Exception("Uncaught exception", e);
                 throw;
             }
             finally

@@ -45,7 +45,7 @@ namespace PlugAndTrade.DieScheite.Client.RabbitMQ
             }
             catch (Exception e)
             {
-                logEntry.Error($"Uncaught exception: {e.Message}", e.StackTrace);
+                logEntry.Exception("Uncaught exception", e);
                 throw;
             }
             finally

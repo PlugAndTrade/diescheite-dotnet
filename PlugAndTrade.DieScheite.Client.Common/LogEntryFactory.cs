@@ -68,7 +68,7 @@ namespace PlugAndTrade.DieScheite.Client.Common
             }
             catch (Exception e)
             {
-                entry.Error($"<{e.GetType().Name}> {e.Message}", e.StackTrace);
+                entry.Exception("Uncaught exception", e);
                 throw;
             }
             finally
