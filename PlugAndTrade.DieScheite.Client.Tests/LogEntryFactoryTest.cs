@@ -28,7 +28,7 @@ namespace PlugAndTrade.DieScheite.Client.Tests
             logger.Verify(x => x.Publish(It.Is<LogEntry>(log =>
                 400 >= log.Level
                 && log.Messages.Count == 1
-                && string.Equals(log.Messages[0].Message, "<TestException> Foobar")
+                && string.Equals(log.Messages[0].Message, "Uncaught exception (<TestException> Foobar)")
                 && !string.IsNullOrEmpty(log.Messages[0].Stacktrace)
             )));
         }
